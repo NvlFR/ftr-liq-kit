@@ -1,10 +1,7 @@
 <script setup>
+import { Head, useForm } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { QCard, QCardSection, QForm, QInput, QBtn, QBanner } from 'quasar';
 
 const form = useForm({
     name: '',
@@ -24,90 +21,73 @@ const submit = () => {
     <GuestLayout>
         <Head title="Register" />
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
+        <q-banner v-if="form.hasErrors" inline-actions class="text-white bg-red q-mb-md">
+            Oops! Ada yang salah. Silakan periksa kembali isian Anda.
+        </q-banner>
 
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+        <q-card class="my-card">
+            <q-card-section>
+                <div class="text-h6 text-center">Buat Akun Baru</div>
+                <div class="text-subtitle2 text-center">Isi data di bawah untuk mendaftar</div>
+            </q-card-section>
 
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
+            <q-card-section>
+                <q-form @submit.prevent="submit" class="q-gutter-md">
+                    <q-input
+                        filled
+                        v-model="form.name"
+                        label="Nama Lengkap"
+                        lazy-rules
+                        :error="form.errors.name ? true : false"
+                        :error-message="form.errors.name"
+                        autocomplete="name"
+                    />
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+                    <q-input
+                        filled
+                        v-model="form.email"
+                        label="Alamat Email"
+                        lazy-rules
+                        :error="form.errors.email ? true : false"
+                        :error-message="form.errors.email"
+                        type="email"
+                        autocomplete="username"
+                    />
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
+                    <q-input
+                        filled
+                        v-model="form.password"
+                        label="Password"
+                        lazy-rules
+                        :error="form.errors.password ? true : false"
+                        :error-message="form.errors.password"
+                        type="password"
+                        autocomplete="new-password"
+                    />
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+                    <q-input
+                        filled
+                        v-model="form.password_confirmation"
+                        label="Konfirmasi Password"
+                        lazy-rules
+                        type="password"
+                        autocomplete="new-password"
+                    />
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                    <div class="flex items-center justify-between q-mt-lg">
+                        <a :href="route('login')" class="text-grey-8">
+                            Sudah punya akun?
+                        </a>
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                >
-                    Already registered?
-                </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
+                        <q-btn
+                            label="Register"
+                            type="submit"
+                            color="primary"
+                            :loading="form.processing"
+                        />
+                    </div>
+                </q-form>
+            </q-card-section>
+        </q-card>
     </GuestLayout>
 </template>

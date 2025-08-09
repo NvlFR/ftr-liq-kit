@@ -1,17 +1,10 @@
 <script setup>
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { QCard, QCardSection, QForm, QInput, QBtn, QBanner } from 'quasar';
 
 defineProps({
-    mustVerifyEmail: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
+    mustVerifyEmail: Boolean,
+    status: String,
 });
 
 const user = usePage().props.auth.user;
@@ -23,90 +16,57 @@ const form = useForm({
 </script>
 
 <template>
-    <section>
-        <header>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                Profile Information
-            </h2>
+    <q-card>
+        <q-card-section>
+            <div class="text-h6">Informasi Profil</div>
+            <div class="text-subtitle2">Perbarui informasi profil dan alamat email akun Anda.</div>
+        </q-card-section>
 
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Update your account's profile information and email address.
-            </p>
-        </header>
-
-        <form
-            @submit.prevent="form.patch(route('profile.update'))"
-            class="mt-6 space-y-6"
-        >
-            <div>
-                <InputLabel for="name" value="Name" />
-
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
+        <q-card-section>
+            <q-form @submit.prevent="form.patch(route('profile.update'))" class="q-gutter-md">
+                <q-input
+                    filled
                     v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
+                    label="Nama"
+                    :error="form.errors.name ? true : false"
+                    :error-message="form.errors.name"
                 />
 
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
-
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
+                <q-input
+                    filled
                     v-model="form.email"
-                    required
-                    autocomplete="username"
+                    label="Email"
+                    :error="form.errors.email ? true : false"
+                    :error-message="form.errors.email"
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div v-if="mustVerifyEmail && user.email_verified_at === null">
-                <p class="mt-2 text-sm text-gray-800 dark:text-gray-200">
-                    Your email address is unverified.
-                    <Link
-                        :href="route('verification.send')"
-                        method="post"
-                        as="button"
-                        class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                    >
-                        Click here to re-send the verification email.
-                    </Link>
-                </p>
-
-                <div
-                    v-show="status === 'verification-link-sent'"
-                    class="mt-2 text-sm font-medium text-green-600 dark:text-green-400"
-                >
-                    A new verification link has been sent to your email address.
-                </div>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
-
-                <Transition
-                    enter-active-class="transition ease-in-out"
-                    enter-from-class="opacity-0"
-                    leave-active-class="transition ease-in-out"
-                    leave-to-class="opacity-0"
-                >
-                    <p
-                        v-if="form.recentlySuccessful"
-                        class="text-sm text-gray-600 dark:text-gray-400"
-                    >
-                        Saved.
+                <div v-if="mustVerifyEmail && user.email_verified_at === null">
+                    <p class="text-sm q-mt-sm text-grey-8">
+                        Alamat email Anda belum terverifikasi.
+                        <Link
+                            :href="route('verification.send')"
+                            method="post"
+                            as="button"
+                            class="underline text-grey-6"
+                        >
+                            Klik di sini untuk mengirim ulang email verifikasi.
+                        </Link>
                     </p>
-                </Transition>
-            </div>
-        </form>
-    </section>
+                    <q-banner v-if="status === 'verification-link-sent'" inline-actions class="text-white bg-green q-mt-md">
+                        Tautan verifikasi baru telah dikirim ke alamat email Anda.
+                    </q-banner>
+                </div>
+
+                <div class="flex items-center q-gutter-x-sm">
+                    <q-btn label="Simpan" type="submit" color="primary" :loading="form.processing" />
+                    <transition
+                        enter-active-class="animated fadeIn"
+                        leave-active-class="animated fadeOut"
+                    >
+                        <div v-if="form.recentlySuccessful" class="text-grey-8">Tersimpan.</div>
+                    </transition>
+                </div>
+            </q-form>
+        </q-card-section>
+    </q-card>
 </template>

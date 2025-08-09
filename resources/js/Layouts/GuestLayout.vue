@@ -1,22 +1,23 @@
 <script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import { Link } from '@inertiajs/vue3';
+import { QLayout, QPageContainer, QPage } from 'quasar';
 </script>
 
 <template>
-    <div
-        class="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0 dark:bg-gray-900"
-    >
-        <div>
-            <Link href="/">
-                <ApplicationLogo class="h-20 w-20 fill-current text-gray-500" />
-            </Link>
-        </div>
-
-        <div
-            class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg dark:bg-gray-800"
-        >
-            <slot />
-        </div>
-    </div>
+    <q-layout>
+        <q-page-container>
+            <q-page class="flex flex-center bg-grey-2">
+                <div style="width: 400px; max-width: 90vw;">
+                    <slot />
+                </div>
+            </q-page>
+        </q-page-container>
+    </q-layout>
 </template>
+
+<style scoped>
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>

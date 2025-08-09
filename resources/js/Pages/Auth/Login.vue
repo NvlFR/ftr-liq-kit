@@ -1,30 +1,25 @@
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-
-defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
-});
+import { Head, useForm } from "@inertiajs/vue3";
+import GuestLayout from "@/Layouts/GuestLayout.vue"; // Menggunakan layout khusus tamu
+import {
+    QCard,
+    QCardSection,
+    QForm,
+    QInput,
+    QCheckbox,
+    QBtn,
+    QBanner,
+} from "quasar";
 
 const form = useForm({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     remember: false,
 });
 
 const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
+    form.post(route("login"), {
+        onFinish: () => form.reset("password"),
     });
 };
 </script>
@@ -33,68 +28,65 @@ const submit = () => {
     <GuestLayout>
         <Head title="Log in" />
 
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
-            {{ status }}
-        </div>
+        <q-banner
+            v-if="form.hasErrors"
+            inline-actions
+            class="text-white bg-red q-mb-md"
+        >
+            Oops! Ada yang salah. Silakan periksa kembali isian Anda.
+        </q-banner>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
+        <q-card class="my-card">
+            <q-card-section>
+                <div class="text-h6 text-center">Selamat Datang!</div>
+                <div class="text-subtitle2 text-center">
+                    Silakan masuk untuk melanjutkan
+                </div>
+            </q-card-section>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
+            <q-card-section>
+                <q-form @submit.prevent="submit" class="q-gutter-md">
+                    <q-input
+                        filled
+                        v-model="form.email"
+                        label="Alamat Email"
+                        lazy-rules
+                        :error="form.errors.email ? true : false"
+                        :error-message="form.errors.email"
+                        type="email"
+                        autocomplete="username"
+                    />
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+                    <q-input
+                        filled
+                        v-model="form.password"
+                        label="Password"
+                        lazy-rules
+                        :error="form.errors.password ? true : false"
+                        :error-message="form.errors.password"
+                        type="password"
+                        autocomplete="current-password"
+                    />
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                    <q-checkbox v-model="form.remember" label="Ingat saya" />
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="current-password"
-                />
+                    <div class="flex items-center justify-between q-mt-lg">
+                        <a
+                            :href="route('password.request')"
+                            class="text-grey-8"
+                        >
+                            Lupa password?
+                        </a>
 
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4 block">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400"
-                        >Remember me</span
-                    >
-                </label>
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                >
-                    Forgot your password?
-                </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Log in
-                </PrimaryButton>
-            </div>
-        </form>
+                        <q-btn
+                            label="Log In"
+                            type="submit"
+                            color="primary"
+                            :loading="form.processing"
+                        />
+                    </div>
+                </q-form>
+            </q-card-section>
+        </q-card>
     </GuestLayout>
 </template>

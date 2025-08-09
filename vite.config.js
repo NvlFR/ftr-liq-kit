@@ -1,11 +1,13 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
 
 export default defineConfig({
     plugins: [
         laravel({
             input: 'resources/js/app.js',
+            template: { transformAssetUrls },
             ssr: 'resources/js/ssr.js',
             refresh: true,
         }),
@@ -17,5 +19,8 @@ export default defineConfig({
                 },
             },
         }),
+        quasar({
+            sassVariables: 'resources/css/quasar-variables.scss'
+        })
     ],
 });

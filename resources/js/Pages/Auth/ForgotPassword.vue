@@ -1,15 +1,11 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+import { QCard, QCardSection, QForm, QInput, QBtn, QBanner } from 'quasar';
 
+// 'status' adalah prop yang dikirim oleh Laravel setelah email berhasil dikirim
 defineProps({
-    status: {
-        type: String,
-    },
+    status: String,
 });
 
 const form = useForm({
@@ -25,44 +21,39 @@ const submit = () => {
     <GuestLayout>
         <Head title="Forgot Password" />
 
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Forgot your password? No problem. Just let us know your email
-            address and we will email you a password reset link that will allow
-            you to choose a new one.
-        </div>
+        <q-card class="my-card">
+            <q-card-section>
+                <div class="text-subtitle2">
+                    Lupa password Anda? Tidak masalah. Beri tahu kami alamat email Anda dan kami akan mengirimkan link untuk mengatur ulang password Anda.
+                </div>
+            </q-card-section>
 
-        <div
-            v-if="status"
-            class="mb-4 text-sm font-medium text-green-600 dark:text-green-400"
-        >
-            {{ status }}
-        </div>
+            <q-card-section>
+                <q-banner v-if="status" inline-actions class="text-white bg-green q-mb-md">
+                    {{ status }}
+                </q-banner>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
+                <q-form @submit.prevent="submit" class="q-gutter-md">
+                    <q-input
+                        filled
+                        v-model="form.email"
+                        label="Alamat Email"
+                        lazy-rules
+                        :error="form.errors.email ? true : false"
+                        :error-message="form.errors.email"
+                        type="email"
+                    />
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Email Password Reset Link
-                </PrimaryButton>
-            </div>
-        </form>
+                    <div class="flex justify-end q-mt-lg">
+                         <q-btn
+                            label="Kirim Link Reset Password"
+                            type="submit"
+                            color="primary"
+                            :loading="form.processing"
+                        />
+                    </div>
+                </q-form>
+            </q-card-section>
+        </q-card>
     </GuestLayout>
 </template>
