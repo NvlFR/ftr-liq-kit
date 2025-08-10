@@ -1,1 +1,20 @@
-$primary: #26A69A;
+$primary   : #023336;
+$secondary : #069899;
+$accent    : #7ec6c7;
+
+$dark      : #034246;
+$dark-page : #023336;
+
+$positive  : #4caf50;
+$negative  : #f44336;
+$info      : #2196f3;
+$warning   : #ff9800; 
+
+
+// $primary   : #02d1d0; // Toska terang (warna utama logo)
+
+
+.q-field__native:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
